@@ -1,0 +1,17 @@
+name: Tests
+
+on:
+  push:
+    branches: [chore/github-actions]
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - run: pipenv install --deploy --dev
+      - run: pipenv run ./bin/lint
+      - run: pipenv run ./bin/test

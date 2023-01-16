@@ -1,7 +1,7 @@
 import argparse
 
-from build_versions.ci_config import generate_config
-from build_versions.dockerfile import render_dockerfile_by_config
+from build_versions.ci_matrix import generate_matrix
+from build_versions.dockerfiles import render_dockerfile_by_config
 from build_versions.logger import init_logging
 from build_versions.readme import update_readme_tags_table
 from build_versions.settings import DISTROS
@@ -18,7 +18,7 @@ def main(distros, dry_run, force, ci_config, ci_trigger, dockerfile_config, rele
     new_or_updated = find_new_or_updated(current_versions, versions, force)
 
     if ci_config:
-        generate_config(new_or_updated, ci_trigger)
+        generate_matrix(new_or_updated, ci_trigger)
 
     if not new_or_updated and not ci_config:
         print("No new or updated versions")

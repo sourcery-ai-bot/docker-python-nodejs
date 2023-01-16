@@ -1,0 +1,39 @@
+name: Deploy
+
+on:
+  push:
+    branches: [chore/github-actions]
+
+jobs:
+  generate-matrix:
+    name: Generate Job Matrix
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - run: pipenv install --deploy --dev
+      - run: |
+          FORCE=$(if git log --pretty=format:"%s" HEAD^..HEAD | grep -q '\[force\]'; then echo "--force"; else echo ""; fi)
+          pipenv run python -m build_versions.main --ci-config $FORCE --ci-trigger $CI_TRIGGER --force
+        id: set-matrix
+
+  test:
+    name: Check ${{ matrix.nickname }}
+    runs-on: ubuntu-latest
+    if: needs.generate-matrix.outputs.matrix != ''
+    needs: [generate-matrix]
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix: ${{fromJSON(needs.generate-matrix.outputs.matrix)}}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - run: echo ${{ matrix.key }}

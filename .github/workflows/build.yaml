@@ -18,9 +18,7 @@ jobs:
       - run: |
           pip install -U pip pipenv
           pipenv install --deploy --dev
-      - run: |
-          FORCE=$(if git log --pretty=format:"%s" HEAD^..HEAD | grep -q '\[force\]'; then echo "--force"; else echo ""; fi)
-          pipenv run python -m build_versions.main --ci-config $FORCE --ci-trigger $CI_TRIGGER --force
+      - run: pipenv run python -m build_versions.main --ci-config $FORCE --ci-trigger $CI_TRIGGER --force
         id: set-matrix
 
   test:

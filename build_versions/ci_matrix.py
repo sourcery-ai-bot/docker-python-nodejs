@@ -1,6 +1,5 @@
 import json
 
-
 TRIGGER_SCHEDULED = "scheduled"
 
 

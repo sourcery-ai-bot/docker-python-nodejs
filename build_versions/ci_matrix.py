@@ -1,14 +1,15 @@
 import json
 
-TRIGGER_SCHEDULED = "scheduled"
+CI_EVENT_SCHEDULED = "scheduled"
 
 
 def job_with_name(job, name):
     return isinstance(job, dict) and name in job
 
 
-def generate_matrix(new_or_updated: list, trigger: str):
-    if not new_or_updated and trigger == TRIGGER_SCHEDULED:
+def generate_matrix(new_or_updated: list, ci_event: str):
+    print("🔥", ci_event)
+    if not new_or_updated and ci_event == CI_EVENT_SCHEDULED:
         print("\n# Scheduled run with no new or updated versions. Doing nothing.")
         return
 

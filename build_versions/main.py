@@ -8,7 +8,7 @@ from build_versions.settings import DISTROS
 from build_versions.versions import decide_version_combinations, find_new_or_updated, load_versions, persist_versions
 
 
-def main(distros, dry_run, force, ci_config, ci_trigger, dockerfile_config, release):
+def main(distros, dry_run, force, ci_config, ci_event, dockerfile_config, release):
     if dockerfile_config:
         render_dockerfile_by_config(dockerfile_config, dry_run)
         return
@@ -18,7 +18,7 @@ def main(distros, dry_run, force, ci_config, ci_trigger, dockerfile_config, rele
     new_or_updated = find_new_or_updated(current_versions, versions, force)
 
     if ci_config:
-        generate_matrix(new_or_updated, ci_trigger)
+        generate_matrix(new_or_updated, ci_event)
 
     if not new_or_updated and not ci_config:
         print("No new or updated versions")
@@ -48,9 +48,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("--ci-config", action="store_true", help="Generate CI Config")
     parser.add_argument(
-        "--ci-trigger",
+        "--ci-event",
         default="webhook",
-        help="CI parameter pipeline.trigger_source (https://circleci.com/docs/2.0/pipeline-variables/#pipeline-values)",
+        help="GitHub Action event name, ref. github.event_name in https://docs.github.com/en/actions/learn-github-actions/contexts#github-context",
     )
     parser.add_argument("--release", action="store_true", help="Persist versions and make a release")
     parser.add_argument(
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         args.dry_run,
         args.force,
         args.ci_config,
-        args.ci_trigger,
+        args.ci_event,
         args.dockerfile_from_config,
         args.release,
     )

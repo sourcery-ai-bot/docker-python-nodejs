@@ -22,7 +22,7 @@ jobs:
         id: set-matrix
 
   deploy:
-    name: Check ${{ matrix.nickname }}
+    name: ${{ matrix.key }}
     runs-on: ubuntu-latest
     if: needs.generate-matrix.outputs.matrix != ''
     needs: [generate-matrix]

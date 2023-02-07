@@ -50,7 +50,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--ci-event",
         default="webhook",
-        help="GitHub Action event name, ref. github.event_name in https://docs.github.com/en/actions/learn-github-actions/contexts#github-context",
+        # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+        help="GitHub Action event name (github.event_name)",
     )
     parser.add_argument("--release", action="store_true", help="Persist versions and make a release")
     parser.add_argument(
